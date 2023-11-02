@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+int isOperator(char c) {
+    char operators[] = "+-*/%=<>&|^";
+    for (int i = 0; operators[i]; i++) {
+        if (c == operators[i]) {
+            return 1;
+        }
+    }
+    return 0;
+}
+int isKeyword(char* token) {
+    char* keywords[] = {"int", "float", "if", "else", "while", "for", "return"};
+    for (int i = 0; i < sizeof(keywords) / sizeof(keywords[0]); i++) {
+        if (strcmp(token, keywords[i]) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+int main() {
+    char input[1000];
+    printf("Enter a line of C code: ");
+    fgets(input, sizeof(input), stdin);
+    char* token = strtok(input, " \t\n");
+    while (token != NULL) {
+        if (isOperator(token[0])) {
+            printf("Operator: %s\n", token);
+        } else if (isdigit(token[0]) || (token[0] == '-' && isdigit(token[1]))) {
+            printf("Constant: %s\n", token);
+        } else {
+            if (!isKeyword(token)) {
+                printf("Identifier: %s\n", token);
+            }
+        }
+        token = strtok(NULL, " \t\n");
+    }
+    return 0;
+}
